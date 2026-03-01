@@ -10,7 +10,6 @@ import leadersRoutes from './routes/leaders';
 import analysisRoutes from './routes/analysis';
 import summaryRoutes from './routes/summary';
 import healthRoutes from './routes/health';
-import debugRoutes from './routes/debug';
 
 const app = new Hono<{ Bindings: Bindings }>();
 
@@ -26,7 +25,6 @@ app.route('/api/leaders', leadersRoutes);
 app.route('/api/analysis', analysisRoutes);
 app.route('/api/summary', summaryRoutes);
 app.route('/api/health', healthRoutes);
-app.route('/api/debug', debugRoutes);
 
 // Root
 app.get('/', (c) => {
