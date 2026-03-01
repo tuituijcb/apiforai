@@ -31,6 +31,16 @@ function hashCode(str: string): string {
   return Math.abs(hash).toString(36);
 }
 
+/**
+ * Encode query for GDELT URL.
+ * GDELT needs parentheses and colons unencoded; only encode spaces and quotes.
+ */
+function encodeGdeltQuery(query: string): string {
+  return query
+    .replace(/ /g, '%20')
+    .replace(/"/g, '%22');
+}
+
 export async function fetchCategoryNews(category: NewsCategory): Promise<NewsItem[]> {
   const cacheKey = `news:${category}`;
   const cached = cache.get<NewsItem[]>(cacheKey);
@@ -38,17 +48,22 @@ export async function fetchCategoryNews(category: NewsCategory): Promise<NewsIte
 
   const query = CATEGORY_QUERIES[category];
   const fullQuery = `${query} sourcelang:english`;
-  const url = `https://api.gdeltproject.org/api/v2/doc/doc?query=${encodeURIComponent(fullQuery)}&timespan=7d&mode=artlist&maxrecords=20&format=json&sort=date`;
+  const url = `https://api.gdeltproject.org/api/v2/doc/doc?query=${encodeGdeltQuery(fullQuery)}&timespan=7d&mode=artlist&maxrecords=20&format=json&sort=date`;
 
   try {
-    
     const res = await apiFetch(url);
     if (!res.ok) return [];
 
     const ct = res.headers.get('content-type');
     if (!ct?.includes('application/json')) return [];
 
-    const data = await res.json() as { articles?: GdeltArticle[] };
+    const text = await res.text();
+    let data: { articles?: GdeltArticle[] };
+    try {
+      data = JSON.parse(text);
+    } catch {
+      return [];
+    }
     if (!data?.articles) return [];
 
     const items: NewsItem[] = data.articles.map((a, i) => {
@@ -80,7 +95,6 @@ export async function fetchAllNews(
   const cats = categories ?? ALL_CATEGORIES;
   const results: Record<string, NewsItem[]> = {};
 
-  // Fetch in parallel (server-side, no rate limit concern for GDELT)
   const entries = await Promise.all(
     cats.map(async (cat) => [cat, await fetchCategoryNews(cat)] as const),
   );
