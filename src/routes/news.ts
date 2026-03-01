@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import type { Bindings, NewsCategory } from '../types';
-import { fetchAllNews, fetchCategoryNews } from '../api/news';
+import { fetchAllNews, fetchCategoryNews, getLastDiag } from '../api/news';
 import { ALL_CATEGORIES } from '../config/feeds';
 
 const app = new Hono<{ Bindings: Bindings }>();
@@ -16,16 +16,17 @@ app.get('/', async (c) => {
     );
     if (cats.length === 1) {
       const items = await fetchCategoryNews(cats[0]);
-      if (debug) {
-        return c.json({ ok: true, count: items.length, data: items.slice(0, limit), ts: Date.now() });
-      }
-      return c.json({ ok: true, data: items.slice(0, limit), ts: Date.now() });
+      const resp: Record<string, unknown> = { ok: true, data: items.slice(0, limit), ts: Date.now() };
+      if (debug) resp._diag = getLastDiag();
+      return c.json(resp);
     }
     const data = await fetchAllNews(cats);
     for (const key of Object.keys(data)) {
       data[key] = data[key].slice(0, limit);
     }
-    return c.json({ ok: true, data, ts: Date.now() });
+    const resp: Record<string, unknown> = { ok: true, data, ts: Date.now() };
+    if (debug) resp._diag = getLastDiag();
+    return c.json(resp);
   }
 
   const data = await fetchAllNews();
