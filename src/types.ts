@@ -2,6 +2,7 @@
 export type Bindings = {
   FINNHUB_API_KEY?: string;
   FRED_API_KEY?: string;
+  CACHE: KVNamespace;
 };
 
 // ─── News ───

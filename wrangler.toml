@@ -2,7 +2,12 @@ name = "apiforai"
 main = "src/index.ts"
 compatibility_date = "2025-03-01"
 
+[[kv_namespaces]]
+binding = "CACHE"
+id = "74038fd2f6bb428bbe45109a82117602"
+
+[triggers]
+crons = ["0 * * * *"]
+
 [vars]
-# Add API keys via: wrangler secret put FINNHUB_API_KEY
-# FINNHUB_API_KEY = ""
-# FRED_API_KEY = ""
+# API keys configured via: wrangler secret put <KEY_NAME>
