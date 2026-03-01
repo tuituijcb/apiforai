@@ -40,7 +40,8 @@ export async function fetchCategoryNews(category: NewsCategory): Promise<NewsIte
   const url = `https://api.gdeltproject.org/api/v2/doc/doc?query=${encodeURIComponent(fullQuery)}&timespan=7d&mode=artlist&maxrecords=20&format=json&sort=date`;
 
   try {
-    const res = await fetch(url);
+    const { apiFetch } = await import("../services/fetch");
+    const res = await apiFetch(url);
     if (!res.ok) return [];
 
     const ct = res.headers.get('content-type');

@@ -15,7 +15,8 @@ const INDICATORS = [
 async function fetchSeries(seriesId: string, apiKey: string): Promise<{ value: number; date: string } | null> {
   try {
     const url = `https://api.stlouisfed.org/fred/series/observations?series_id=${seriesId}&api_key=${apiKey}&file_type=json&sort_order=desc&limit=1`;
-    const res = await fetch(url);
+    const { apiFetch } = await import("../services/fetch");
+    const res = await apiFetch(url);
     if (!res.ok) return null;
     const data = await res.json() as { observations?: { value: string; date: string }[] };
     const obs = data.observations?.[0];
