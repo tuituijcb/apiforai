@@ -1,0 +1,8 @@
+name = "apiforai"
+main = "src/index.ts"
+compatibility_date = "2025-03-01"
+
+[vars]
+# Add API keys via: wrangler secret put FINNHUB_API_KEY
+# FINNHUB_API_KEY = ""
+# FRED_API_KEY = ""
