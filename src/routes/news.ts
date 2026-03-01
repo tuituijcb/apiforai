@@ -8,6 +8,7 @@ const app = new Hono<{ Bindings: Bindings }>();
 app.get('/', async (c) => {
   const catParam = c.req.query('cat');
   const limit = parseInt(c.req.query('limit') || '20', 10);
+  const debug = c.req.query('debug') === '1';
 
   if (catParam) {
     const cats = catParam.split(',').filter(
@@ -15,10 +16,12 @@ app.get('/', async (c) => {
     );
     if (cats.length === 1) {
       const items = await fetchCategoryNews(cats[0]);
+      if (debug) {
+        return c.json({ ok: true, count: items.length, data: items.slice(0, limit), ts: Date.now() });
+      }
       return c.json({ ok: true, data: items.slice(0, limit), ts: Date.now() });
     }
     const data = await fetchAllNews(cats);
-    // Apply limit per category
     for (const key of Object.keys(data)) {
       data[key] = data[key].slice(0, limit);
     }
