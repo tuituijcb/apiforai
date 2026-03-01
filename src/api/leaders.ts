@@ -1,3 +1,4 @@
+import { apiFetch } from "../services/fetch";
 import type { WorldLeader, LeaderNews } from '../types';
 import { WORLD_LEADERS } from '../config/leaders';
 import { cache } from '../services/cache';
@@ -15,7 +16,7 @@ async function fetchLeaderNews(keywords: string[]): Promise<LeaderNews[]> {
   const url = `https://api.gdeltproject.org/api/v2/doc/doc?query=(${encodeURIComponent(query)}) sourcelang:english&timespan=3d&mode=artlist&maxrecords=5&format=json&sort=date`;
 
   try {
-    const { apiFetch } = await import("../services/fetch");
+    
     const res = await apiFetch(url);
     if (!res.ok) return [];
     const ct = res.headers.get('content-type');

@@ -1,3 +1,4 @@
+import { apiFetch } from "../services/fetch";
 import type { NewsCategory, NewsItem } from '../types';
 import { CATEGORY_QUERIES, ALL_CATEGORIES } from '../config/feeds';
 import { containsAlertKeyword, detectRegion, detectTopics } from '../config/keywords';
@@ -40,7 +41,7 @@ export async function fetchCategoryNews(category: NewsCategory): Promise<NewsIte
   const url = `https://api.gdeltproject.org/api/v2/doc/doc?query=${encodeURIComponent(fullQuery)}&timespan=7d&mode=artlist&maxrecords=20&format=json&sort=date`;
 
   try {
-    const { apiFetch } = await import("../services/fetch");
+    
     const res = await apiFetch(url);
     if (!res.ok) return [];
 

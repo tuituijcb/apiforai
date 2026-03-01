@@ -1,3 +1,4 @@
+import { apiFetch } from "../services/fetch";
 import type { CryptoItem } from '../types';
 import { CRYPTO } from '../config/markets';
 import { cache } from '../services/cache';
@@ -21,7 +22,7 @@ export async function fetchCrypto(coinIds?: string[]): Promise<CryptoItem[]> {
 
   try {
     const url = `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true`;
-    const { apiFetch } = await import("../services/fetch");
+    
     const res = await apiFetch(url);
     if (!res.ok) return coins.map(c => ({ id: c.id, symbol: c.symbol, name: c.name, price: 0, change24h: 0, changePercent24h: 0 }));
 

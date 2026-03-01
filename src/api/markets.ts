@@ -1,3 +1,4 @@
+import { apiFetch } from "../services/fetch";
 import type { MarketItem } from '../types';
 import { INDICES, INDEX_ETF_MAP, SECTORS, COMMODITIES, COMMODITY_ETF_MAP } from '../config/markets';
 import { cache } from '../services/cache';
