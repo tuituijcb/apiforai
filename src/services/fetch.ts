@@ -7,7 +7,7 @@ const DEFAULT_HEADERS: Record<string, string> = {
 };
 
 export async function apiFetch(url: string, opts?: RequestInit & { timeoutMs?: number }): Promise<Response> {
-  const { timeoutMs = 8000, ...fetchOpts } = opts ?? {};
+  const { timeoutMs = 25000, ...fetchOpts } = opts ?? {};
 
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
